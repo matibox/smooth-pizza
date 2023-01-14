@@ -27,9 +27,11 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
   // Authenticated users
   Route::post('/logout', [AuthController::class, 'logout']);
 
-  Route::post('/pizzas', [PizzaController::class, 'store']);
-  Route::put('/pizzas/{id}', [PizzaController::class, 'update']);
-  Route::delete('/pizzas/{id}', [PizzaController::class, 'destroy']);
+  Route::group(['middleware' => ['isAdmin']], function() {
+    Route::post('/pizzas', [PizzaController::class, 'store']);
+    Route::put('/pizzas/{id}', [PizzaController::class, 'update']);
+    Route::delete('/pizzas/{id}', [PizzaController::class, 'destroy']);
+  });
 });
 
 
