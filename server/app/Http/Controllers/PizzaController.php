@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pizza;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PizzaController extends Controller
 {
@@ -55,6 +56,9 @@ class PizzaController extends Controller
     public function update(Request $request, $id)
     {
       $pizza = Pizza::find($id);
+      if (!$pizza) {
+        return response()->json(['status' => 404, 'message' => 'Not found'], 404);
+      }
       $pizza->update($request->all());
       return $pizza;
     }

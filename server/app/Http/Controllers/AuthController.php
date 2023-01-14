@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Config;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -17,11 +16,18 @@ class AuthController extends Controller
         'password' => 'required|string|confirmed',
       ]);
 
+      
       $user = User::create([
         'name' => $fields['name'],
         'email' => $fields['email'],
         'password' => bcrypt($fields['password'])
       ]);
+      
+      if ($fields['email'] == \Config::get('env.adminMail')) {
+        $user = User::find($user['id']);
+        $user->isAdmin = '1';
+        $user->save();
+      }  
 
       $token = $user->createToken('myapptoken')->plainTextToken;
 

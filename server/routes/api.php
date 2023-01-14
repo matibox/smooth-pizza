@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Unauthenticated users
+// Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -24,12 +24,15 @@ Route::get('/pizzas', [PizzaController::class, 'index']);
 Route::get('/pizzas/{id}', [PizzaController::class, 'show']);
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
-  // Authenticated users
+  // Protected routes
   Route::post('/logout', [AuthController::class, 'logout']);
 
-  Route::post('/pizzas', [PizzaController::class, 'store']);
-  Route::put('/pizzas/{id}', [PizzaController::class, 'update']);
-  Route::delete('/pizzas/{id}', [PizzaController::class, 'destroy']);
+  Route::group(['middleware' => ['isAdmin']], function() {
+    // Admin routes
+    Route::post('/pizzas', [PizzaController::class, 'store']);
+    Route::put('/pizzas/{id}', [PizzaController::class, 'update']);
+    Route::delete('/pizzas/{id}', [PizzaController::class, 'destroy']);
+  });
 });
 
 
