@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pizza;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class PizzaController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class PizzaController extends Controller
      */
     public function index()
     {
-      return Pizza::all();
+      return Product::all();
     }
 
     /**
@@ -29,10 +29,11 @@ class PizzaController extends Controller
       $request->validate([
         'name' => 'required',
         'slug' => 'required',
-        'price' => 'required'
+        'price' => 'required',
+        'category' => 'required|in:pizza,sauce,cold-drinks,hot-drinks,beer,wine'
       ]);
 
-      return Pizza::create($request->all());
+      return Product::create($request->all());
     }
 
     /**
@@ -43,7 +44,7 @@ class PizzaController extends Controller
      */
     public function show($id)
     {
-      return Pizza::find($id);
+      return Product::find($id);
     }
 
     /**
@@ -55,12 +56,12 @@ class PizzaController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $pizza = Pizza::find($id);
-      if (!$pizza) {
+      $product = Product::find($id);
+      if (!$product) {
         return response()->json(['status' => 404, 'message' => 'Not found'], 404);
       }
-      $pizza->update($request->all());
-      return $pizza;
+      $product->update($request->all());
+      return $product;
     }
 
     /**
@@ -71,6 +72,6 @@ class PizzaController extends Controller
      */
     public function destroy($id)
     {
-      return Pizza::destroy($id);
+      return Product::destroy($id);
     }
 }

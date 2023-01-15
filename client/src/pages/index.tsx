@@ -2,11 +2,11 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRef } from 'react';
-import type { Pizza } from '../types/Pizza';
+import type { Product } from '../types/Pizza';
 import api from '../utils/axios';
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
-  pizzas,
+  products,
 }) => {
   const scrollToRef = useRef<HTMLElement>(null);
 
@@ -50,8 +50,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div>
             <h2 className='text-4xl sm:text-5xl'>Our Menu</h2>
           </div>
-          {pizzas.map(pizza => (
-            <p key={pizza.id}>{pizza.name}</p>
+          {products.map(product => (
+            <p key={product.id}>{product.name}</p>
           ))}
         </section>
       </div>
@@ -59,12 +59,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps<{ pizzas: Pizza[] }> = async () => {
-  const data = await api.get('pizzas').then(res => res.data as Pizza[]);
+export const getStaticProps: GetStaticProps<{
+  products: Product[];
+}> = async () => {
+  const data = await api.get('products').then(res => res.data as Product[]);
 
   return {
     props: {
-      pizzas: data,
+      products: data,
     },
     revalidate: 60,
   };

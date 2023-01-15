@@ -1,4 +1,12 @@
-export type Pizza = {
+export type ProductCategory =
+  | 'pizza'
+  | 'sauce'
+  | 'cold-drinks'
+  | 'hot-drinks'
+  | 'beer'
+  | 'wine';
+
+export type Product = {
   id: number;
   name: string;
   slug: string;
@@ -6,4 +14,5 @@ export type Pizza = {
   price: string;
   created_at: string;
   updated_at: string;
+  category: ProductCategory;
 };

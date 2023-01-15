@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pizza extends Model
+class Product extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -13,5 +13,6 @@ class Pizza extends Model
       'slug',
       'description',
       'price',
+      'category'
     ];
 }

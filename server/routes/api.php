@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PizzaController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/pizzas', [PizzaController::class, 'index']);
-Route::get('/pizzas/{id}', [PizzaController::class, 'show']);
+Route::get('/products', [ProductController::class, 'index']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 
 Route::group(['middleware' => ['auth:sanctum']], function() {
   // Protected routes
@@ -29,9 +29,9 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 
   Route::group(['middleware' => ['isAdmin']], function() {
     // Admin routes
-    Route::post('/pizzas', [PizzaController::class, 'store']);
-    Route::put('/pizzas/{id}', [PizzaController::class, 'update']);
-    Route::delete('/pizzas/{id}', [PizzaController::class, 'destroy']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
   });
 });
 
