@@ -2,7 +2,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRef } from 'react';
-import type { Product } from '../types/Pizza';
+import type { Product } from '../types/Product';
 import api from '../utils/axios';
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
