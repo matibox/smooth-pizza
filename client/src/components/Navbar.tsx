@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { type FC } from 'react';
 
+const noSignInBtnRoutes = ['/signin', '/signup'];
+
 const Navbar: FC = () => {
   const router = useRouter();
 
@@ -28,7 +30,7 @@ const Navbar: FC = () => {
           Smooth Pizza
         </span>
       </Link>
-      {router.pathname !== '/signin' && (
+      {!noSignInBtnRoutes.includes(router.pathname) && (
         <Link
           href={'/signin'}
           className={`px-4 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600`}

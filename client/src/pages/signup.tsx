@@ -1,6 +1,7 @@
 import { type NextPage } from 'next';
 import Link from 'next/link';
 import { useState, type FormEvent } from 'react';
+import Loading from '../components/Loading';
 import UserForm, { type FormState, type Field } from '../components/UserForm';
 
 const formFields: Field[] = [
@@ -31,15 +32,16 @@ const SignIn: NextPage = () => {
 
   return (
     <div className='flex h-screen w-screen flex-col justify-center gap-4 bg-orange-100 pt-[var(--navbar-height)] font-roboto-slab'>
+      <Loading isLoading={true} fullScreen />
       <div className='mx-auto flex w-3/4 max-w-lg flex-col gap-2'>
-        <h1 className='text-4xl'>Sign in</h1>
+        <h1 className='text-4xl'>Sign up</h1>
         <p>
-          Don&apos;t have an account?{' '}
+          Already have an account?{' '}
           <Link
-            href='/signup'
+            href='/signin'
             className='text-amber-600 transition-colors hover:text-amber-400 focus:outline-none focus-visible:text-amber-400'
           >
-            Sign up.
+            Sign in.
           </Link>
         </p>
       </div>
