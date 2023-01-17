@@ -1,10 +1,17 @@
 export type Error = {
   status?: number;
-  message: string;
+  response: {
+    data: {
+      message: string;
+      errors: {
+        [key: string]: string[];
+      };
+    };
+  };
 };
 
 export function isApiError(error: unknown): error is Error {
-  if ((error as Error).message) {
+  if ((error as Error).response.data.message) {
     return true;
   }
   return false;

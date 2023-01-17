@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { signUp } from '../lib/auth';
 import { parseSchema } from '../utils/zod';
 import { isApiError } from '../types/Error';
+import formatError from '../utils/formatError';
 
 const formFields: Field[] = [
   {
@@ -137,7 +138,7 @@ const SignIn: NextPage = () => {
       <>
         {error && (
           <p className='mx-auto w-3/4 max-w-lg text-red-600'>
-            {isApiError(error) ? error.message : 'Unknown error occured'}
+            {isApiError(error) ? formatError(error) : 'Unknown error occured'}
           </p>
         )}
         {validationError && (
