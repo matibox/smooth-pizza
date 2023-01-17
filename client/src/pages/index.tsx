@@ -2,8 +2,8 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRef } from 'react';
+import { getProducts } from '../lib/products';
 import type { Product } from '../types/Product';
-import api from '../utils/axios';
 
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   products,
@@ -62,7 +62,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 export const getStaticProps: GetStaticProps<{
   products: Product[];
 }> = async () => {
-  const data = await api.get('products').then(res => res.data as Product[]);
+  const data = await getProducts();
 
   return {
     props: {

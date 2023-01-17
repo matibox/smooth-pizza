@@ -1,20 +1,20 @@
 import type {
-  FormEvent,
   HTMLInputTypeAttribute,
   FC,
   Dispatch,
   SetStateAction,
+  FormEventHandler,
 } from 'react';
 
 export type Field = {
-  label: 'email' | 'password' | 'name';
+  label: 'email' | 'password' | 'name' | 'confirm password';
   type: HTMLInputTypeAttribute;
 };
 
 export type FormState = Partial<Record<Field['label'], string>>;
 
 type UserFormProps = {
-  handleSubmit: (e: FormEvent) => void;
+  handleSubmit: FormEventHandler;
   fields: Field[];
   formState: FormState;
   setFormState: Dispatch<SetStateAction<FormState>>;

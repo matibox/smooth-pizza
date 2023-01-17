@@ -10,7 +10,7 @@ const Navbar: FC = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 z-10 flex h-[var(--navbar-height)] w-screen items-center justify-between border-b border-b-stone-200 bg-white bg-opacity-70 px-4 font-roboto-slab
+      className={`fixed top-0 left-0 z-10 flex h-[var(--navbar-height)] w-screen items-center justify-between border-b border-b-stone-200 bg-stone-50 bg-opacity-70 px-4 font-roboto-slab
     text-stone-900 backdrop-blur sm:px-8
       `}
     >
