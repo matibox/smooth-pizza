@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { type NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState, type FormEvent } from 'react';
 import { z } from 'zod';
 import Loading from '../components/Loading';
@@ -8,6 +9,7 @@ import UserForm, { type FormState, type Field } from '../components/UserForm';
 import { useAuth } from '../context/AuthContext';
 import { signUp } from '../lib/auth';
 import { parseSchema } from '../utils/zod';
+import { isApiError } from '../types/Error';
 
 const formFields: Field[] = [
   {
@@ -47,7 +49,7 @@ const signUpSchema = z
     confirmPassword: z.string(),
   })
   .refine(data => data.password === data.confirmPassword, {
-    message: 'Passwords did not match.',
+    message: 'Passwords did not match',
     path: ['confirmPassword'],
   });
 
@@ -61,10 +63,10 @@ const SignIn: NextPage = () => {
   const [validationError, setValidationError] = useState<string | undefined>(
     undefined
   );
+  const router = useRouter();
+  const { user, setUser } = useAuth();
 
-  const { setUser } = useAuth();
-
-  const { mutate, error } = useMutation({
+  const { mutate, error, isLoading } = useMutation({
     mutationFn: (userData: {
       name: string;
       email: string;
@@ -73,6 +75,8 @@ const SignIn: NextPage = () => {
     }) => signUp(userData),
     onSuccess: data => {
       setUser({ ...data.user, token: data.token });
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      router.push('/');
     },
   });
 
@@ -98,13 +102,19 @@ const SignIn: NextPage = () => {
   }
 
   useEffect(() => {
-    console.log(error);
-    console.log(validationError);
-  }, [error, validationError]);
+    if (!user) return;
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    router.push('/');
+  }, [router, user]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
+    router.prefetch('/');
+  }, [router]);
 
   return (
     <div className='flex h-screen w-screen flex-col justify-center gap-4 bg-orange-100 pt-[var(--navbar-height)] font-roboto-slab'>
-      {/* <Loading isLoading={true} fullScreen /> */}
+      <Loading isLoading={isLoading} fullScreen />
       <div className='mx-auto flex w-3/4 max-w-lg flex-col gap-2'>
         <h1 className='text-4xl'>Sign up</h1>
         <p>
@@ -124,6 +134,18 @@ const SignIn: NextPage = () => {
         fields={formFields}
         submitBtnText='Sign up'
       />
+      <>
+        {error && (
+          <p className='mx-auto w-3/4 max-w-lg text-red-600'>
+            {isApiError(error) ? error.message : 'Unknown error occured'}
+          </p>
+        )}
+        {validationError && (
+          <p className='mx-auto w-3/4 max-w-lg text-red-600'>
+            {validationError}
+          </p>
+        )}
+      </>
     </div>
   );
 };
