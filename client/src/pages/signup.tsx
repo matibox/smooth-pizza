@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { type NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { z } from 'zod';
 import Loading from '../components/Loading';
 import UserForm, { type FormState, type Field } from '../components/UserForm';
@@ -11,6 +11,7 @@ import { signUp } from '../lib/auth';
 import { parseSchema } from '../utils/zod';
 import { isApiError } from '../types/Error';
 import formatError from '../utils/formatError';
+import useSignInProtection from '../hooks/useSignInProtection';
 
 const formFields: Field[] = [
   {
@@ -61,19 +62,12 @@ const SignIn: NextPage = () => {
     name: '',
     'confirm password': '',
   });
-  const [validationError, setValidationError] = useState<string | undefined>(
-    undefined
-  );
+  const [validationError, setValidationError] = useState<string>();
   const router = useRouter();
   const { user, setUser, setToken } = useAuth();
 
   const { mutate, error, isLoading } = useMutation({
-    mutationFn: (userData: {
-      name: string;
-      email: string;
-      password: string;
-      confirmPassword: string;
-    }) => signUp(userData),
+    mutationFn: (userData: z.infer<typeof signUpSchema>) => signUp(userData),
     onSuccess: data => {
       setUser(data.user);
       setToken(data.token);
@@ -103,16 +97,7 @@ const SignIn: NextPage = () => {
     mutate(userData);
   }
 
-  useEffect(() => {
-    if (!user) return;
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.push('/');
-  }, [router, user]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    router.prefetch('/');
-  }, [router]);
+  useSignInProtection(router, user);
 
   return (
     <div className='flex h-screen w-screen flex-col justify-center gap-4 bg-orange-100 pt-[var(--navbar-height)] font-roboto-slab'>

@@ -39,3 +39,20 @@ export async function getUserByToken(token: string) {
       .then(res => res.data);
   });
 }
+
+export async function signIn({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  return await getCsrf().then(async () => {
+    return await api
+      .post<{ user: User; token: string }>('login', {
+        email,
+        password,
+      })
+      .then(res => res.data);
+  });
+}
