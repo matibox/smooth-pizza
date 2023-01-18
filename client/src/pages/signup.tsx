@@ -65,7 +65,7 @@ const SignIn: NextPage = () => {
     undefined
   );
   const router = useRouter();
-  const { user, setUser } = useAuth();
+  const { user, setUser, setToken } = useAuth();
 
   const { mutate, error, isLoading } = useMutation({
     mutationFn: (userData: {
@@ -75,7 +75,8 @@ const SignIn: NextPage = () => {
       confirmPassword: string;
     }) => signUp(userData),
     onSuccess: data => {
-      setUser({ ...data.user, token: data.token });
+      setUser(data.user);
+      setToken(data.token);
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       router.push('/');
     },
