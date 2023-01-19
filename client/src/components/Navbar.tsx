@@ -10,14 +10,12 @@ const noSignInBtnRoutes = ['/signin', '/signup', '/signedOut'];
 
 const Navbar: FC = () => {
   const router = useRouter();
-  const { user, setUser, setToken } = useAuth();
+  const { user } = useAuth();
 
   const { mutate } = useMutation({
     mutationFn: (token: string) => signOut(token),
     onSuccess: async () => {
       await router.push('/signedOut');
-      setUser(undefined);
-      setToken(undefined);
     },
   });
 
