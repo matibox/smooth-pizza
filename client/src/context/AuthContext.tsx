@@ -14,12 +14,10 @@ import { isApiError } from '../types/Error';
 import type { User } from '../types/User';
 import formatError from '../utils/formatError';
 
-type AuthCtxUser = User | undefined;
-
 type AuthContext = {
-  user: Partial<(AuthCtxUser & { token: string }) | undefined>;
-  setUser: Dispatch<SetStateAction<AuthCtxUser>>;
-  setToken: (token: string) => void;
+  user: (User & { token: string }) | undefined;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
+  setToken: (token: string | undefined) => void;
 } | null;
 
 const AuthContext = createContext<AuthContext>(null);
@@ -37,18 +35,17 @@ export default function AuthContextProvider({
 }: {
   children: ReactNode;
 }) {
-  const [user, setUser] = useState<AuthCtxUser>();
+  const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
 
   const authUser = useMemo(() => {
     if (token) {
       return {
-        ...user,
+        ...(user as User),
         token,
       };
-    } else {
-      return user;
     }
+    return undefined;
   }, [user, token]);
 
   const { mutate } = useMutation({

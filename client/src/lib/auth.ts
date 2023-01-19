@@ -56,3 +56,11 @@ export async function signIn({
       .then(res => res.data);
   });
 }
+
+export async function signOut(token: string) {
+  return await api.post<{message: string}>('logout', undefined, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+}
