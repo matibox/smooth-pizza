@@ -2,6 +2,7 @@ import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import { useRef } from 'react';
+import ProductList from '../components/ProductList';
 import { getProducts } from '../lib/products';
 import type { Product } from '../types/Product';
 
@@ -50,9 +51,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div>
             <h2 className='text-4xl sm:text-5xl'>Our Menu</h2>
           </div>
-          {products.map(product => (
-            <p key={product.id}>{product.name}</p>
-          ))}
+          <ProductList products={products} />
         </section>
       </div>
     </>
