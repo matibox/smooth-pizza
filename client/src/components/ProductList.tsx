@@ -1,5 +1,6 @@
 import { useCallback, useMemo, type FC } from 'react';
 import type { Product, ProductCategory } from '../types/Product';
+import ProductEl from './Product';
 
 type ProductListProps = {
   products: Product[];
@@ -35,11 +36,22 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
         const sectionHeading =
           replacedDashes.charAt(0).toUpperCase() + replacedDashes.slice(1);
         return (
-          <section key={key} className='mb-4 flex flex-col gap-1 last:mb-0'>
-            <h2 className='text-lg font-bold'>{sectionHeading}</h2>
+          <section
+            key={key}
+            className='mb-8 flex flex-col gap-2 last:mb-0 md:mb-14 md:gap-4'
+          >
+            <h2 className='text-xl text-amber-600 md:text-3xl'>
+              {sectionHeading}
+              {sectionHeading === 'Pizza' && (
+                <span className='ml-2 text-base text-stone-900 md:text-lg'>
+                  {' '}
+                  Ø 32cm
+                </span>
+              )}
+            </h2>
             <div>
               {productCategories[key].map(product => (
-                <div key={product.id}>{product.name}</div>
+                <ProductEl key={product.id} product={product} />
               ))}
             </div>
           </section>

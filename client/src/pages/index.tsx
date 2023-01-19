@@ -46,7 +46,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </header>
         <section
           ref={scrollToRef}
-          className='flex h-screen w-full flex-col items-center pt-[calc(var(--navbar-height)_+_1rem)] text-stone-900'
+          className='flex w-full flex-col items-center py-[calc(var(--navbar-height)_+_1rem)] text-stone-900'
         >
           <div>
             <h2 className='text-4xl sm:text-5xl'>Our Menu</h2>
