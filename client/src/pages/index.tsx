@@ -1,7 +1,8 @@
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { type NextPage } from 'next';
 import Head from 'next/head';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import AddToCart from '../components/AddToCart';
 import ProductList from '../components/ProductList';
 import { getProducts } from '../lib/products';
 import type { Product } from '../types/Product';
@@ -10,6 +11,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   products,
 }) => {
   const scrollToRef = useRef<HTMLElement>(null);
+
+  const [chosenProduct, setChosenProduct] = useState<Product>();
 
   return (
     <>
@@ -51,9 +54,15 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div>
             <h2 className='text-4xl sm:text-5xl'>Our Menu</h2>
           </div>
-          <ProductList products={products} />
+          <ProductList
+            products={products}
+            setChosenProduct={setChosenProduct}
+          />
         </section>
       </div>
+      {chosenProduct && (
+        <AddToCart product={chosenProduct} setProduct={setChosenProduct} />
+      )}
     </>
   );
 };

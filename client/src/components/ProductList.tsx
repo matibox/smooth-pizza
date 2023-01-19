@@ -1,16 +1,23 @@
-import { useCallback, useMemo, type FC } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useCallback,
+  useMemo,
+  type FC,
+} from 'react';
 import type { Product, ProductCategory } from '../types/Product';
 import ProductEl from './Product';
 
 type ProductListProps = {
   products: Product[];
+  setChosenProduct: Dispatch<SetStateAction<Product | undefined>>;
 };
 
 const objectKeys = <T extends object>(obj: T) => {
   return Object.keys(obj) as Array<keyof T>;
 };
 
-const ProductList: FC<ProductListProps> = ({ products }) => {
+const ProductList: FC<ProductListProps> = ({ products, setChosenProduct }) => {
   const filterProducts = useCallback(
     (category: ProductCategory) =>
       products.filter(product => product.category === category),
@@ -51,7 +58,12 @@ const ProductList: FC<ProductListProps> = ({ products }) => {
             </h2>
             <div>
               {productCategories[key].map(product => (
-                <ProductEl key={product.id} product={product} />
+                <ProductEl
+                  key={product.id}
+                  product={product}
+                  setChosenProduct={setChosenProduct}
+                  addToCart
+                />
               ))}
             </div>
           </section>
