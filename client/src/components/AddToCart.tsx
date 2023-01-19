@@ -7,6 +7,7 @@ import {
   useMemo,
 } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import type { Product } from '../types/Product';
 import ProductEl from './Product';
 
@@ -18,6 +19,7 @@ type AddToCartProps = {
 const AddToCart: FC<AddToCartProps> = ({ product, setProduct }) => {
   const { user } = useAuth();
   const [count, setCount] = useState(1);
+  const { addProduct } = useCart();
 
   const totalPrice = useMemo(() => {
     return (parseFloat(product.price) * count).toFixed(2);
@@ -62,7 +64,13 @@ const AddToCart: FC<AddToCartProps> = ({ product, setProduct }) => {
             </div>
             <div className='flex w-full items-center justify-between self-end sm:w-max sm:gap-8'>
               <span className='text-lg font-bold'>Total: {totalPrice} €</span>
-              <button className='w-32 px-4 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600'>
+              <button
+                className='w-32 px-4 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600'
+                onClick={() => {
+                  addProduct(product, count);
+                  setProduct(undefined);
+                }}
+              >
                 Add to cart
               </button>
             </div>

@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import '../styles/globals.css';
 import AuthContextProvider from '../context/AuthContext';
+import CartContextProvider from '../context/CartContext';
 
 const robotoSlab = Roboto_Slab({
   subsets: ['latin'],
@@ -20,14 +21,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
-        <nav className={robotoSlab.variable}>
-          <Navbar />
-        </nav>
-        <main
-          className={`${robotoSlab.variable} min-h-[calc(100vh_-_var(--navbar-height))] w-full overflow-x-hidden`}
-        >
-          <Component {...pageProps} />
-        </main>
+        <CartContextProvider>
+          <nav className={robotoSlab.variable}>
+            <Navbar />
+          </nav>
+          <main
+            className={`${robotoSlab.variable} min-h-[calc(100vh_-_var(--navbar-height))] w-full overflow-x-hidden`}
+          >
+            <Component {...pageProps} />
+          </main>
+        </CartContextProvider>
       </AuthContextProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>
