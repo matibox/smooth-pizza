@@ -13,6 +13,7 @@ type CartContext = {
   products: Array<Product & { amount: number }>;
   addProduct: (product: Product, amount: number) => void;
   removeProduct: (id: number) => void;
+  clearCart: () => void;
   totalPrice: number;
   cartOpened: boolean;
   setCartOpened: Dispatch<SetStateAction<boolean>>;
@@ -64,6 +65,10 @@ export default function CartContextProvider({
     setCartProducts(prev => prev.filter(product => product.id !== id));
   };
 
+  const clearCart = () => {
+    setCartProducts([]);
+  };
+
   const totalPrice = useMemo(() => {
     let totalPrice = 0;
     cartProducts.forEach(product => {
@@ -78,6 +83,7 @@ export default function CartContextProvider({
         products: cartProducts,
         addProduct,
         removeProduct,
+        clearCart,
         totalPrice,
         cartOpened,
         setCartOpened,
