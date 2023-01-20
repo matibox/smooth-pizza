@@ -16,4 +16,5 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_API_URL: z.string().url(),
+  NEXT_PUBLIC_PROMO_CODE: z.string().length(9),
 });
