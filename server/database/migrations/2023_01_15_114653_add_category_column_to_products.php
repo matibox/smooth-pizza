@@ -13,8 +13,15 @@ class AddCategoryColumnToProducts extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        Schema::dropIfExists('pizzas');
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
             $table->enum('category', ['pizza', 'sauce', 'cold-drinks', 'hot-drinks', 'beer', 'wine'])->default('pizza');
+            $table->string('name');
+            $table->string('slug');
+            $table->string('description');
+            $table->decimal('price', 5, 2);
+            $table->timestamps();
         });
     }
 
@@ -25,8 +32,14 @@ class AddCategoryColumnToProducts extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('category');
+        Schema::dropIfExists('products');
+        Schema::create('pizzas', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('slug');
+            $table->string('description');
+            $table->decimal('price', 5, 2);
+            $table->timestamps();
         });
     }
 }

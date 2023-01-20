@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+    
     protected $fillable = [
       'name',
       'slug',
@@ -15,4 +16,8 @@ class Product extends Model
       'price',
       'category'
     ];
+
+    public function orders() {
+      return $this->belongsToMany(Order::class);
+    }
 }
