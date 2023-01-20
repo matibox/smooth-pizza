@@ -29,7 +29,7 @@ const Cart: FC = () => {
             ))}
           </div>
           <div className='mt-2 w-full text-right'>
-            <span className='font-bold'>Total price: {totalPrice}</span>
+            <span className='font-bold'>Total price: {totalPrice} €</span>
           </div>
           <div className='mt-4 flex w-full items-center justify-around'>
             <Link
