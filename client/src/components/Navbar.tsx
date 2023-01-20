@@ -44,7 +44,7 @@ const Navbar: FC = () => {
           Smooth Pizza
         </span>
       </Link>
-      {user && (
+      {user && router.pathname !== '/checkout' && (
         <button
           onClick={() => setCartOpened(prev => !prev)}
           className={`ml-auto px-3 py-1 ring-1 ring-stone-900 transition-all ${
@@ -65,7 +65,9 @@ const Navbar: FC = () => {
       {user && router.pathname !== '/signedOut' && (
         <button
           onClick={() => mutate(user.token)}
-          className='px-3 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600 md:px-4'
+          className={`px-3 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600 md:px-4 ${
+            router.pathname === '/checkout' ? 'ml-auto' : ''
+          }`}
         >
           Sign out
         </button>

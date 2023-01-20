@@ -3,7 +3,7 @@ import { type FC } from 'react';
 import { useCart } from '../context/CartContext';
 
 const Cart: FC = () => {
-  const { products, removeProduct, clearCart } = useCart();
+  const { products, removeProduct, clearCart, totalPrice } = useCart();
 
   return (
     <div className='absolute right-4 top-[calc(var(--navbar-height)_+_1rem)] mx-auto flex w-[calc(100%_-_2rem)] flex-col items-center justify-center bg-orange-100 p-2 ring-1 ring-stone-900 drop-shadow-xl sm:right-16 sm:mx-0 sm:w-64'>
@@ -27,6 +27,9 @@ const Cart: FC = () => {
                 </button>
               </div>
             ))}
+          </div>
+          <div className='mt-2 w-full text-right'>
+            <span className='font-bold'>Total price: {totalPrice}</span>
           </div>
           <div className='mt-4 flex w-full items-center justify-around'>
             <Link
