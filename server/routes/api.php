@@ -27,12 +27,15 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::group(['middleware' => ['auth:sanctum']], function() {
   // Protected routes
   Route::post('/logout', [AuthController::class, 'logout']);
+  Route::post('/orders', [OrderController::class, 'store']);
 
   Route::group(['middleware' => ['isAdmin']], function() {
     // Admin routes
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+    
+    Route::get('/orders', [OrderController::class, 'index']);
   });
 });
 

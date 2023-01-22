@@ -11,16 +11,17 @@ class Order extends Model
 
     protected $fillable = [
       'payment',
-      'price'
+      'price',
+      'street',
+      'house_number',
+      'city',
+      'apartment_number',
+      'user_id'
     ];
 
     public function products() {
       return $this->belongsToMany(Product::class);
     } 
-
-    public function delivery() {
-      return $this->hasOne(Delivery::class);
-    }
 
     public function user() {
       return $this->belongsTo(User::class);
