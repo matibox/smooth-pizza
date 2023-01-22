@@ -1,16 +1,27 @@
 import { type NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { RadioGroup } from '@headlessui/react';
 import type { PaymentMethod } from '../types/Payment';
+import { z } from 'zod';
+import { parseSchema } from '../utils/zod';
 
 const promoCode = process.env.NEXT_PUBLIC_PROMO_CODE as string;
 
 const paymentMethods: PaymentMethod[] = ['BLIK', 'Transfer', 'Visa/Mastercard'];
 
-//TODO form schema
+const formSchema = z.object({
+  delivery: z.object({
+    street: z.string().min(1, 'Street is required'),
+    houseNumber: z.string().min(1, 'House number is required'),
+    city: z.string().min(1, 'City is required'),
+    apartmentNumber: z.string().optional(),
+  }),
+  cart: z.array(z.any()).min(1, 'Your cart is empty'),
+  payment: z.enum(['BLIK', 'Transfer', 'Visa/Mastercard']),
+});
 
 const Checkout: NextPage = () => {
   const {
@@ -31,6 +42,8 @@ const Checkout: NextPage = () => {
     apartmentNumber: '',
   });
 
+  const [formError, setFormError] = useState<string>();
+
   useEffect(() => {
     setCartOpened(false);
   }, [setCartOpened]);
@@ -48,9 +61,37 @@ const Checkout: NextPage = () => {
     return itemsPrice;
   }, [formState.promoCode, itemsPrice]);
 
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+
+    const { street, houseNumber, city, apartmentNumber, payment } = formState;
+
+    const formData = {
+      delivery: {
+        street,
+        houseNumber,
+        city,
+        apartmentNumber,
+      },
+      cart: products,
+      payment,
+    };
+
+    const result = parseSchema(formSchema, formData);
+
+    if (result.error) {
+      return setFormError(result.message);
+    }
+  }
+
+  //TODO handle error
+
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[calc(var(--navbar-height)_+_1rem)] pb-4 font-roboto-slab'>
-      <form className='mx-auto flex w-4/5 max-w-xl flex-col gap-6 bg-stone-50 p-4'>
+      <form
+        className='mx-auto flex w-4/5 max-w-xl flex-col gap-6 bg-stone-50 p-4'
+        onSubmit={handleSubmit}
+      >
         <section className='flex w-full flex-col gap-4'>
           <h1 className='text-center text-xl md:text-3xl'>Checkout</h1>
           <h2 className='text-lg md:text-xl'>Cart</h2>
