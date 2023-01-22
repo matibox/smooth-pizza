@@ -7,10 +7,20 @@ import { RadioGroup } from '@headlessui/react';
 import type { PaymentMethod } from '../types/Payment';
 import { z } from 'zod';
 import { parseSchema } from '../utils/zod';
+import { useMutation } from '@tanstack/react-query';
+import { placeOrder } from '../lib/orders';
+import type { OrderPOSTInput } from '../types/Order';
+import Loading from '../components/Loading';
+import formatError from '../utils/formatError';
+import { isApiError } from '../types/Error';
 
 const promoCode = process.env.NEXT_PUBLIC_PROMO_CODE as string;
 
-const paymentMethods: PaymentMethod[] = ['BLIK', 'Transfer', 'Visa/Mastercard'];
+const paymentMethods: readonly PaymentMethod[] = [
+  'BLIK',
+  'Transfer',
+  'Visa/Mastercard',
+] as const;
 
 const formSchema = z.object({
   delivery: z.object({
@@ -34,7 +44,7 @@ const Checkout: NextPage = () => {
   const router = useRouter();
 
   const [formState, setFormState] = useState({
-    payment: paymentMethods[0],
+    payment: paymentMethods[0] as PaymentMethod,
     promoCode: '',
     street: '',
     houseNumber: '',
@@ -61,6 +71,20 @@ const Checkout: NextPage = () => {
     return itemsPrice;
   }, [formState.promoCode, itemsPrice]);
 
+  const { mutate, isLoading, error } = useMutation({
+    mutationFn: (data: {
+      order: OrderPOSTInput;
+      token: string | undefined;
+    }) => {
+      const { order, token } = data;
+      return placeOrder(order, token);
+    },
+    onSuccess: () => {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      router.push('/');
+    },
+  });
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -82,12 +106,22 @@ const Checkout: NextPage = () => {
     if (result.error) {
       return setFormError(result.message);
     }
-  }
 
-  //TODO handle error
+    mutate({
+      order: {
+        ...formState,
+        houseNumber: parseInt(formState.houseNumber),
+        apartmentNumber: parseInt(formState.apartmentNumber),
+        price: totalPrice,
+        products,
+      },
+      token: user?.token,
+    });
+  }
 
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[calc(var(--navbar-height)_+_1rem)] pb-4 font-roboto-slab'>
+      {isLoading && <Loading isLoading={isLoading} fullScreen />}
       <form
         className='mx-auto flex w-4/5 max-w-xl flex-col gap-6 bg-stone-50 p-4'
         onSubmit={handleSubmit}
@@ -209,33 +243,43 @@ const Checkout: NextPage = () => {
           </div>
         </section>
         <section className='flex w-full flex-col gap-4'>
-          <RadioGroup
-            value={formState.payment}
-            onChange={value =>
-              setFormState(prev => ({ ...prev, payment: value }))
-            }
-          >
-            <RadioGroup.Label as='h2' className='mb-4 text-lg md:text-xl'>
-              Payment
-            </RadioGroup.Label>
-            <div className='flex flex-col gap-2 md:flex-row'>
-              {paymentMethods.map(method => (
-                <RadioGroup.Option key={method} value={method}>
-                  {({ checked }) => (
-                    <span
-                      className={`${
-                        checked
-                          ? 'bg-amber-500 ring-amber-500'
-                          : 'bg-stone-50 ring-stone-900 hover:text-amber-500 hover:ring-amber-500'
-                      } flex w-full cursor-pointer items-center justify-center px-6 py-2 text-stone-900 ring-1   transition-all sm:w-40`}
-                    >
-                      {method}
-                    </span>
-                  )}
-                </RadioGroup.Option>
-              ))}
-            </div>
-          </RadioGroup>
+          <>
+            <RadioGroup
+              value={formState.payment}
+              onChange={value =>
+                setFormState(prev => ({ ...prev, payment: value }))
+              }
+            >
+              <RadioGroup.Label as='h2' className='mb-4 text-lg md:text-xl'>
+                Payment
+              </RadioGroup.Label>
+              <div className='flex flex-col gap-2 md:flex-row'>
+                {paymentMethods.map(method => (
+                  <RadioGroup.Option key={method} value={method}>
+                    {({ checked }) => (
+                      <span
+                        className={`${
+                          checked
+                            ? 'bg-amber-500 ring-amber-500'
+                            : 'bg-stone-50 ring-stone-900 hover:text-amber-500 hover:ring-amber-500'
+                        } flex w-full cursor-pointer items-center justify-center px-6 py-2 text-stone-900 ring-1   transition-all sm:w-40`}
+                      >
+                        {method}
+                      </span>
+                    )}
+                  </RadioGroup.Option>
+                ))}
+              </div>
+            </RadioGroup>
+            {formError && <p className='text-red-600'>{formError}</p>}
+            {error && (
+              <p className='text-red-600'>
+                {isApiError(error)
+                  ? formatError(error)
+                  : 'Unknown error occured.'}
+              </p>
+            )}
+          </>
         </section>
         <section className='flex w-full flex-col border-t border-stone-300 pt-6'>
           <button

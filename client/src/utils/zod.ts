@@ -23,7 +23,7 @@ export const parseSchema = (
       const errors = err.errors.map(err => err.message);
       return {
         error: true,
-        message: errors.reduce((a, b) => `${a}. ${b}.`),
+        message: errors.reduce((a, b) => `${a}. ${b}`),
       };
     }
     return {
