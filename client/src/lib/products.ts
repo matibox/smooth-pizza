@@ -1,4 +1,4 @@
-import type { Product } from '../types/Product';
+import type { Product, ProductInput } from '../types/Product';
 import api from '../utils/axios';
 
 export async function getProducts() {
@@ -14,4 +14,17 @@ export async function deleteProduct(
       Authorization: `Bearer ${token ?? ''}`,
     },
   });
+}
+
+export async function addProduct(
+  product: ProductInput,
+  token: string | undefined
+) {
+  return await api
+    .post<Product>('products', product, {
+      headers: {
+        Authorization: `Bearer ${token ?? ''}`,
+      },
+    })
+    .then(res => res.data);
 }

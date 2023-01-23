@@ -45,7 +45,7 @@ const AddToCart: FC<AddToCartProps> = ({ product, setProduct }) => {
             </h2>
             <div className='flex w-full items-center justify-between'>
               <div>
-                <ProductEl product={product} addToCart={false} />
+                <ProductEl product={product} addToCart={false} delete={false} />
               </div>
               <div className='flex w-32 justify-between bg-amber-500 py-2 px-4 ring-1 ring-stone-50'>
                 <button

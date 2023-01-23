@@ -28,6 +28,7 @@ class ProductController extends Controller
     {
       $request->validate([
         'name' => 'required',
+        'description' => 'required',
         'price' => 'required',
         'category' => 'required|in:pizza,sauce,cold-drinks,hot-drinks,beer,wine'
       ]);

@@ -15,3 +15,5 @@ export type Product = {
   updated_at: string;
   category: ProductCategory;
 };
+
+export type ProductInput = Omit<Product, 'id' | 'created_at' | 'updated_at'>;

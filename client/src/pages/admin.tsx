@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  type InferGetStaticPropsType,
-  type GetStaticProps,
+  type InferGetServerSidePropsType,
+  type GetServerSideProps,
   type NextPage,
 } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from '../components/Loading';
+import NewProductForm from '../components/NewProductForm';
 import Order from '../components/Order';
 import ProductEl from '../components/Product';
 import { useAuth } from '../context/AuthContext';
@@ -16,12 +17,13 @@ import { isApiError } from '../types/Error';
 import type { Product } from '../types/Product';
 import formatError from '../utils/formatError';
 
-const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
-  products: initialProducts,
-}) => {
+const Admin: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ products: initialProducts }) => {
   const { user, isLoading: userLoading } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [newProductIsOpen, setNewProductIsOpen] = useState(false);
 
   useEffect(() => {
     if (userLoading) return;
@@ -44,13 +46,13 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     initialData: initialProducts,
   });
 
-  const { mutate: deleteProduct } = useMutation({
+  const { mutate: deleteProduct, ...deleteMutation } = useMutation({
     mutationFn: (data: { productId: number; token: string | undefined }) => {
       const { productId, token } = data;
       return deleteProductFn(productId, token);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['products', 'orders']);
+      await queryClient.invalidateQueries(['products']);
     },
   });
 
@@ -58,11 +60,12 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     deleteProduct({ productId, token: user?.token });
   }
 
-  //TODO add products
-
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[var(--navbar-height)] font-roboto-slab'>
       {userLoading && <Loading isLoading={userLoading} fullScreen />}
+      {newProductIsOpen && (
+        <NewProductForm close={() => setNewProductIsOpen(false)} />
+      )}
       <div className='grid min-h-full w-full grid-cols-1 gap-8 p-4 md:grid-cols-[repeat(2,_1fr)] xl:grid-cols-[2fr,_3fr]'>
         <section>
           <h1 className='mb-4 text-center text-3xl text-stone-900'>Orders</h1>
@@ -88,8 +91,19 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </section>
         <section>
           <h1 className='mb-4 text-center text-3xl'>Products</h1>
-          <div className='flex flex-col'>
+          <div className='relative flex flex-col'>
             <>
+              {deleteMutation.isLoading && (
+                <div className='absolute top-0 left-0 flex h-full w-full items-center justify-center bg-stone-900/50'>
+                  <Loading isLoading={deleteMutation.isLoading} />
+                </div>
+              )}
+              <button
+                className='self-start text-stone-900 underline underline-offset-4 transition-colors hover:text-amber-600'
+                onClick={() => setNewProductIsOpen(true)}
+              >
+                Add new product
+              </button>
               {productsQuery.error && (
                 <p className='text-center text-red-500'>
                   {isApiError(productsQuery.error)
@@ -118,7 +132,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   products: Product[];
 }> = async () => {
   const data = await getProducts();
@@ -127,7 +141,6 @@ export const getStaticProps: GetStaticProps<{
     props: {
       products: data,
     },
-    revalidate: 60,
   };
 };
 
