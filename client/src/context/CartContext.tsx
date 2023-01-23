@@ -6,6 +6,7 @@ import {
   useContext,
   type SetStateAction,
   type Dispatch,
+  useEffect,
 } from 'react';
 import type { Product } from '../types/Product';
 
@@ -38,6 +39,7 @@ export default function CartContextProvider({
   const [cartProducts, setCartProducts] = useState<
     Array<Product & { amount: number }>
   >([]);
+  const [processingStorage, setProcessingStorage] = useState(true);
 
   const addProduct = (product: Product, amount: number) => {
     setCartProducts(prev => {
@@ -54,7 +56,6 @@ export default function CartContextProvider({
           ...currentProduct,
           amount: (currentProduct.amount += amount),
         };
-
         return newProducts;
       }
       return [...prev, { ...product, amount }];
@@ -68,6 +69,18 @@ export default function CartContextProvider({
   const clearCart = () => {
     setCartProducts([]);
   };
+
+  useEffect(() => {
+    if (processingStorage) return;
+    localStorage.setItem('cart', JSON.stringify(cartProducts));
+  }, [cartProducts, processingStorage]);
+
+  useEffect(() => {
+    const item = localStorage.getItem('cart');
+    if (!item) return setProcessingStorage(false);
+    setCartProducts(JSON.parse(item) as typeof cartProducts);
+    setProcessingStorage(false);
+  }, []);
 
   const totalPrice = useMemo(() => {
     let totalPrice = 0;

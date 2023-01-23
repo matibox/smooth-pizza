@@ -157,9 +157,9 @@ const Checkout: NextPage = () => {
               </div>
             ))}
           </div>
-          <div className='flex w-full justify-between'>
+          <div className='flex flex-wrap gap-4'>
             <label className='flex w-44 flex-col gap-1'>
-              <span className='w-full text-right md:text-left'>Promo code</span>
+              <span className='w-full text-left'>Promo code</span>
               <input
                 className='py-0.5 px-2 ring-1 ring-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-600'
                 type='text'

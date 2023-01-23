@@ -59,6 +59,27 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             setChosenProduct={setChosenProduct}
           />
         </section>
+        <footer className='flex w-full flex-col items-center justify-center gap-4 bg-stone-900 p-4 text-stone-50'>
+          <h2 className='text-4xl sm:text-5xl'>Contact</h2>
+          <div>
+            <div>
+              <span>Address: </span>
+              61260 Bruce Ramp, Waltermouth 03249-6796
+            </div>
+            <div>
+              <span>Phone: </span>
+              (575) 623-6790
+            </div>
+          </div>
+          <a
+            href='https://github.com/matibox/smooth-pizza'
+            target='_blank'
+            className='hover:text-amber-600'
+            rel='noreferrer'
+          >
+            github
+          </a>
+        </footer>
       </div>
       {chosenProduct && (
         <AddToCart product={chosenProduct} setProduct={setChosenProduct} />
