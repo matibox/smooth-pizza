@@ -1,11 +1,15 @@
-import type { OrderPOSTInput, OrderPOSTReturn } from '../types/Order';
+import type {
+  GetOrdersReturn,
+  OrderPOSTInput,
+  OrderReturn,
+} from '../types/Order';
 import api from '../utils/axios';
 
 export async function placeOrder(
   order: OrderPOSTInput,
   token: string | undefined
 ) {
-  return await api.post<OrderPOSTReturn>(
+  return await api.post<OrderReturn>(
     'orders',
     {
       payment: order.payment,
@@ -22,4 +26,14 @@ export async function placeOrder(
       },
     }
   );
+}
+
+export async function getOrders(token: string | undefined) {
+  return await api
+    .get<GetOrdersReturn>('orders', {
+      headers: {
+        Authorization: `Bearer ${token ?? ''}`,
+      },
+    })
+    .then(res => res.data);
 }

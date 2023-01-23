@@ -1,7 +1,8 @@
 import type { PaymentMethod } from './Payment';
 import type { Product } from './Product';
+import type { User } from './User';
 
-export type OrderPOSTReturn = {
+export type OrderReturn = {
   id: number;
   payment: string;
   price: number;
@@ -22,4 +23,12 @@ export type OrderPOSTInput = {
   apartmentNumber?: number;
   city: string;
   products: Product[];
+};
+
+export type GetOrdersReturn = {
+  data: Array<Order>;
+};
+
+export type Order = OrderReturn & { user: Omit<User, 'isAdmin'> } & {
+  products: Array<Omit<Product, 'slug' | 'created_at' | 'updated_at'>>;
 };
