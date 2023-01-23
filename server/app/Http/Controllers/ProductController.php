@@ -28,7 +28,6 @@ class ProductController extends Controller
     {
       $request->validate([
         'name' => 'required',
-        'slug' => 'required',
         'price' => 'required',
         'category' => 'required|in:pizza,sauce,cold-drinks,hot-drinks,beer,wine'
       ]);
@@ -45,23 +44,6 @@ class ProductController extends Controller
     public function show($id)
     {
       return Product::find($id);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-      $product = Product::find($id);
-      if (!$product) {
-        return response()->json(['status' => 404, 'message' => 'Not found'], 404);
-      }
-      $product->update($request->all());
-      return $product;
     }
 
     /**

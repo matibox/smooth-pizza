@@ -9,7 +9,6 @@ export type ProductCategory =
 export type Product = {
   id: number;
   name: string;
-  slug: string;
   description: string;
   price: string;
   created_at: string;
