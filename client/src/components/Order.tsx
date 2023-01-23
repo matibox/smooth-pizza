@@ -47,7 +47,7 @@ const Order: FC<OrderProps> = ({ order }) => {
         ))}
       </div>
       <h3 className='mt-2 mb-0.5 px-4 text-lg'>Delivery:</h3>
-      <div className='grid w-full grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-1 px-4 text-sm'>
+      <div className='flex flex-col gap-1 px-4 text-sm'>
         <div>
           <span className='font-bold'>City:</span> {order.city}
         </div>
@@ -63,7 +63,7 @@ const Order: FC<OrderProps> = ({ order }) => {
         </div>
       </div>
       <h3 className='mt-2 mb-0.5 px-4 text-lg'>Payment:</h3>
-      <div className='mb-4 px-4 text-sm'>
+      <div className='mb-4 flex flex-col gap-1 px-4 text-sm'>
         <div>
           <span className='font-bold'>Type: </span> {order.payment}
         </div>

@@ -5,15 +5,23 @@ type ProductProps =
   | {
       product: Product;
       addToCart: true;
+      delete: false;
       setChosenProduct: Dispatch<SetStateAction<Product | undefined>>;
     }
   | {
       product: Product;
       addToCart: false;
+      delete: false;
+    }
+  | {
+      product: Product;
+      addToCart: false;
+      delete: true;
+      handleDelete: (productId: number) => void;
     };
 
 const ProductEl: FC<ProductProps> = props => {
-  const { product, addToCart } = props;
+  const { product, addToCart, delete: isDeletable } = props;
 
   return (
     <>
@@ -33,6 +41,14 @@ const ProductEl: FC<ProductProps> = props => {
             onClick={() => props.setChosenProduct(product)}
           >
             Add to cart
+          </button>
+        )}
+        {isDeletable && (
+          <button
+            className='text-sm underline underline-offset-4 transition-colors hover:text-amber-600 focus:text-amber-600 focus:outline-none md:text-base'
+            onClick={() => props.handleDelete(product.id)}
+          >
+            Delete product
           </button>
         )}
       </div>

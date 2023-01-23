@@ -63,6 +63,7 @@ const ProductList: FC<ProductListProps> = ({ products, setChosenProduct }) => {
                   product={product}
                   setChosenProduct={setChosenProduct}
                   addToCart
+                  delete={false}
                 />
               ))}
             </div>
