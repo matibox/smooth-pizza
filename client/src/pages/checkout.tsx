@@ -120,6 +120,8 @@ const Checkout: NextPage = () => {
     });
   }
 
+  //TODO order placed info, clear cart after order placed
+
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[calc(var(--navbar-height)_+_1rem)] pb-4 font-roboto-slab'>
       {isLoading && <Loading isLoading={isLoading} fullScreen />}

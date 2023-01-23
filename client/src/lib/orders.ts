@@ -37,3 +37,14 @@ export async function getOrders(token: string | undefined) {
     })
     .then(res => res.data);
 }
+
+export async function completeOrder(
+  orderId: number,
+  token: string | undefined
+) {
+  return await api.delete(`orders/${orderId}`, {
+    headers: {
+      Authorization: `Bearer ${token ?? ''}`,
+    },
+  });
+}

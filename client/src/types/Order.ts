@@ -11,8 +11,8 @@ export type OrderReturn = {
   house_number: number;
   city: string;
   apartment_number: null | number;
-  updated_at: string;
-  created_at: string;
+  updatedAt: string;
+  createdAt: string;
 };
 
 export type OrderPOSTInput = {
@@ -29,6 +29,8 @@ export type GetOrdersReturn = {
   data: Array<Order>;
 };
 
-export type Order = OrderReturn & { user: Omit<User, 'isAdmin'> } & {
+export type Order = Omit<OrderReturn, 'user_id'> & {
+  user: Omit<User, 'isAdmin'>;
+} & {
   products: Array<Omit<Product, 'slug' | 'created_at' | 'updated_at'>>;
 };
