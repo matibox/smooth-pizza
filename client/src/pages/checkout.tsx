@@ -39,6 +39,7 @@ const Checkout: NextPage = () => {
     products,
     totalPrice: itemsPrice,
     removeProduct,
+    clearCart,
   } = useCart();
   const { user, isLoading: userLoading } = useAuth();
   const router = useRouter();
@@ -53,6 +54,8 @@ const Checkout: NextPage = () => {
   });
 
   const [formError, setFormError] = useState<string>();
+  const [success, setSuccess] =
+    useState<'Order has been successfully placed. Please wait.'>();
 
   useEffect(() => {
     setCartOpened(false);
@@ -81,8 +84,12 @@ const Checkout: NextPage = () => {
       return placeOrder(order, token);
     },
     onSuccess: () => {
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      router.push('/');
+      setTimeout(() => {
+        clearCart();
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
+        router.push('/');
+      }, 3000);
+      setSuccess('Order has been successfully placed. Please wait.');
     },
   });
 
@@ -119,8 +126,6 @@ const Checkout: NextPage = () => {
       token: user?.token,
     });
   }
-
-  //TODO order placed info, clear cart after order placed
 
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[calc(var(--navbar-height)_+_1rem)] pb-4 font-roboto-slab'>
@@ -275,6 +280,7 @@ const Checkout: NextPage = () => {
               </div>
             </RadioGroup>
             {formError && <p className='text-red-600'>{formError}</p>}
+            {success && <p className='text-green-600'>{success}</p>}
             {error && (
               <p className='text-red-600'>
                 {isApiError(error)
@@ -288,6 +294,7 @@ const Checkout: NextPage = () => {
           <button
             type='submit'
             className='px-3 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600 md:px-4'
+            disabled={success ? true : false}
           >
             Order
           </button>
