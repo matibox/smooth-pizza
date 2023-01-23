@@ -5,7 +5,7 @@ import type { User } from './User';
 export type OrderReturn = {
   id: number;
   payment: string;
-  price: number;
+  price: string;
   user_id: number;
   street: string;
   house_number: number;
@@ -22,7 +22,7 @@ export type OrderPOSTInput = {
   houseNumber: number;
   apartmentNumber?: number;
   city: string;
-  products: Product[];
+  products: Array<Product & { amount: number }>;
 };
 
 export type GetOrdersReturn = {
@@ -32,5 +32,7 @@ export type GetOrdersReturn = {
 export type Order = Omit<OrderReturn, 'user_id'> & {
   user: Omit<User, 'isAdmin'>;
 } & {
-  products: Array<Omit<Product, 'slug' | 'created_at' | 'updated_at'>>;
+  products: Array<
+    Omit<Product, 'slug' | 'created_at' | 'updated_at'> & { amount: string }
+  >;
 };

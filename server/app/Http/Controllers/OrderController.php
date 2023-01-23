@@ -46,7 +46,7 @@ class OrderController extends Controller
       ]);
 
       foreach ($request['products'] as $product) {
-        $order->products()->attach($product['id']);
+        $order->products()->attach($product['id'], ['amount' => $product['amount']]);
       }
 
       return $order;
