@@ -18,6 +18,7 @@ type AuthContext = {
   user: (User & { token: string }) | undefined;
   setUser: Dispatch<SetStateAction<User | undefined>>;
   setToken: (token: string | undefined) => void;
+  isLoading: boolean;
 } | null;
 
 const AuthContext = createContext<AuthContext>(null);
@@ -37,6 +38,7 @@ export default function AuthContextProvider({
 }) {
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<string>();
+  const [loading, setLoading] = useState(true);
 
   const authUser = useMemo(() => {
     if (token) {
@@ -61,11 +63,14 @@ export default function AuthContextProvider({
         }
       }
     },
+    onSettled: () => {
+      setLoading(false);
+    },
   });
 
   useEffect(() => {
     const storageToken = localStorage.getItem('token');
-    if (!storageToken) return;
+    if (!storageToken) return setLoading(false);
     setToken(storageToken);
     mutate(storageToken);
   }, [mutate]);
@@ -85,6 +90,7 @@ export default function AuthContextProvider({
         user: authUser,
         setUser,
         setToken: setLocalToken,
+        isLoading: loading,
       }}
     >
       {children}

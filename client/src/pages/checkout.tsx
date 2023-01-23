@@ -40,7 +40,7 @@ const Checkout: NextPage = () => {
     totalPrice: itemsPrice,
     removeProduct,
   } = useCart();
-  const { user } = useAuth();
+  const { user, isLoading: userLoading } = useAuth();
   const router = useRouter();
 
   const [formState, setFormState] = useState({
@@ -59,10 +59,11 @@ const Checkout: NextPage = () => {
   }, [setCartOpened]);
 
   useEffect(() => {
+    if (userLoading) return;
     if (user) return;
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     router.push('/');
-  }, [user, router]);
+  }, [user, router, userLoading]);
 
   const totalPrice = useMemo(() => {
     if (formState.promoCode === promoCode) {
