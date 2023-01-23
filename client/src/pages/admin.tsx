@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   type InferGetStaticPropsType,
   type GetStaticProps,
@@ -11,7 +11,7 @@ import Order from '../components/Order';
 import ProductEl from '../components/Product';
 import { useAuth } from '../context/AuthContext';
 import { getOrders } from '../lib/orders';
-import { getProducts } from '../lib/products';
+import { getProducts, deleteProduct as deleteProductFn } from '../lib/products';
 import { isApiError } from '../types/Error';
 import type { Product } from '../types/Product';
 import formatError from '../utils/formatError';
@@ -21,6 +21,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   const { user, isLoading: userLoading } = useAuth();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (userLoading) return;
@@ -43,9 +44,21 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     initialData: initialProducts,
   });
 
+  const { mutate: deleteProduct } = useMutation({
+    mutationFn: (data: { productId: number; token: string | undefined }) => {
+      const { productId, token } = data;
+      return deleteProductFn(productId, token);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['products', 'orders']);
+    },
+  });
+
   function handleDelete(productId: number) {
-    console.log(productId);
+    deleteProduct({ productId, token: user?.token });
   }
+
+  //TODO add products
 
   return (
     <div className='min-h-screen w-full bg-orange-100 pt-[var(--navbar-height)] font-roboto-slab'>
@@ -84,15 +97,19 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                     : 'Unknown error.'}
                 </p>
               )}
-              {products.map(product => (
-                <ProductEl
-                  key={product.id}
-                  addToCart={false}
-                  product={product}
-                  delete={true}
-                  handleDelete={handleDelete}
-                />
-              ))}
+              {products.length > 0 ? (
+                products.map(product => (
+                  <ProductEl
+                    key={product.id}
+                    addToCart={false}
+                    product={product}
+                    delete={true}
+                    handleDelete={handleDelete}
+                  />
+                ))
+              ) : (
+                <p className='text-center text-lg'>There are no products</p>
+              )}
             </>
           </div>
         </section>
