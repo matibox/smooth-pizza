@@ -19,7 +19,7 @@ type AddToCartProps = {
 const AddToCart: FC<AddToCartProps> = ({ product, setProduct }) => {
   const { user } = useAuth();
   const [count, setCount] = useState(1);
-  const { addProduct } = useCart();
+  const { addProduct, setCartOpened } = useCart();
 
   const totalPrice = useMemo(() => {
     return (parseFloat(product.price) * count).toFixed(2);
@@ -68,6 +68,7 @@ const AddToCart: FC<AddToCartProps> = ({ product, setProduct }) => {
                 className='w-32 px-4 py-1 ring-1 ring-stone-900 transition-all hover:text-amber-600 hover:ring-amber-600 focus-visible:text-amber-600 focus-visible:outline-none focus-visible:ring-amber-600'
                 onClick={() => {
                   addProduct(product, count);
+                  setCartOpened(true);
                   setProduct(undefined);
                 }}
               >
