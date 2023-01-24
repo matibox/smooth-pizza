@@ -22,7 +22,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className='flex min-h-full w-full flex-col bg-orange-100 font-roboto-slab'>
-        <header className='relative flex h-screen w-screen items-center justify-center bg-[url("../assets/hero.jpg")] bg-cover bg-center'>
+        <header className='relative flex h-screen w-screen items-center justify-center bg-[url("../assets/hero.webp")] bg-cover bg-center'>
           <div className='relative z-10 text-stone-50'>
             <h1 className='flex flex-col items-center'>
               <span className='self-start text-2xl text-amber-500 sm:text-3xl'>
